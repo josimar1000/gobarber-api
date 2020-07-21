@@ -1,5 +1,8 @@
 import { startOfHour } from 'date-fns';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
+
+import { injectable, inject } from 'tsyringe';
+
 import AppError from '@shared/errors/AppError';
 
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
@@ -8,13 +11,12 @@ interface IRequest {
   provider_id: string;
   date: Date;
 }
-
+injectable();
 class CreateAppointmentService {
-  private appointmentsRepository: IAppointmentsRepository;
-
-  constructor(appointmentsRepository: IAppointmentsRepository) {
-    this.appointmentsRepository = appointmentsRepository;
-  }
+  constructor(
+    @inject('AppointmentsRepository')
+    private appointmentsRepository: IAppointmentsRepository,
+  ) { }// eslint-disable-line
 
   public async execute({ date, provider_id }: IRequest): Promise<Appointment> {
     const appointmentDate = startOfHour(date);

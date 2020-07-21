@@ -1,6 +1,7 @@
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import path from 'path';
 import fs from 'fs';
+import { injectable, inject } from 'tsyringe';
 import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/errors/AppError';
 
@@ -10,16 +11,15 @@ interface IRequest {
   user_id: string;
   avatarFilename: string;
 }
-
+@injectable()
 class UpdateUserAvatarService {
-  private usersRepository: IUsersRepository;
-
-  constructor(usersRepository: IUsersRepository) {
-    this.usersRepository = usersRepository;
-  }
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) { } // eslint-disable-line
 
   public async execute({ user_id, avatarFilename }: IRequest): Promise<User> {
-    const user = await this.usersRepository.findByid(user_id);
+    const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
       throw new AppError('Only authenticated users con change avatar', 401);
