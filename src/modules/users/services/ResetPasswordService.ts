@@ -16,7 +16,7 @@ class ResetPasswordService {
     private usersRepository: IUsersRepository,
     @inject('UserTokensRepository')
     private userTokensRepository: IUserTokensRepository,
-    @inject('hashProvider')
+    @inject('HashProvider')
     private hashProvider: IHashprovider,
   ) { } // eslint-disable-line
 
